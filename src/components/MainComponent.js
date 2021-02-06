@@ -34,6 +34,14 @@ class Main extends Component {
             );
         }
 
+        const CampsiteWithId = ({match}) => {
+            return (
+                <CampsiteInfo 
+                    campsite={this.state.campsites.filter(campsite => campsite.id === +match.params.campsiteId)[0]}
+                    comments={this.state.comments.filter(comment => comment.campsiteId === +match.params.campsiteId)} />
+            )
+        }
+
         return (
             <div>
                 <Header />
@@ -42,6 +50,8 @@ class Main extends Component {
                     <Route path='/home' component={HomePage} />;
                     {/* kind of like case keywords in JS switch statement if passing state data as props good to use render */}
                     <Route exact path='/directory' render={() => <Directory campsites={this.state.campsites} />} />
+                    {/* ":" tells the router that what follows "/" is going to be a parameter and puts it inside the property campsiteId, the routecomponent itself stores an object stores match in its state which has as a property and object named params and campsiteId gets stored as a property of that params object, route renders component CampsiteWithId, the routes matched object gets passed automatically as a prop to component */}
+                    <Route path='/directory/:campsiteId' component={CampsiteWithId} />
                     {/* telling our App to watch the browser address bar and whenever the Route matches contactus then show Contact component */}
                     <Route exact path='/contactus' component={Contact} />
                     {/* Redirect acts as a catch all kinda like default in switch statement */}
