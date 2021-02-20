@@ -10,6 +10,7 @@ import { Switch, Route, Redirect, withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { actions } from 'react-redux-form';
 import { postComment, fetchCampsites, fetchComments, fetchPromotions } from '../redux/ActionCreators';
+import { TransitionGroup, CSSTransition } from 'react-transition-group';
 
 const mapStateToProps = state => {
     return{
@@ -68,19 +69,23 @@ class Main extends Component {
         return (
             <div>
                 <Header />
-                <Switch>
-                    {/* any traffic going to home goes to the HomePage Component */}
-                    <Route path='/home' component={HomePage} />;
-                    {/* kind of like case keywords in JS switch propsment if passing props data as props good to use render */}
-                    <Route exact path='/directory' render={() => <Directory campsites={this.props.campsites} />} />
-                    {/* ":" tells the router that what follows "/" is going to be a parameter and puts it inside the property campsiteId, the routecomponent itself stores an object stores match in its state which has as a property and object named params and campsiteId gets stored as a property of that params object, route renders component CampsiteWithId, the routes matched object gets passed automatically as a prop to component */}
-                    <Route path='/directory/:campsiteId' component={CampsiteWithId} />
-                    {/* telling our App to watch the browser address bar and whenever the Route matches contactus then show Contact component */}
-                    <Route exact path='/contactus' render={() => <Contact resetFeedbackForm={this.props.resetFeedbackForm} />} />
-                    <Route exact path='/aboutus'  render={() => <About partners={this.props.partners} />} />;
-                    {/* Redirect acts as a catch all kinda like default in switch statement */}
-                    <Redirect to='/home' />
-                </Switch>
+                <TransitionGroup>
+                <CSSTransition key={this.props.location.key} classNames="page" timeout={300}>
+                        <Switch>
+                            {/* any traffic going to home goes to the HomePage Component */}
+                            <Route path='/home' component={HomePage} />;
+                            {/* kind of like case keywords in JS switch propsment if passing props data as props good to use render */}
+                            <Route exact path='/directory' render={() => <Directory campsites={this.props.campsites} />} />
+                            {/* ":" tells the router that what follows "/" is going to be a parameter and puts it inside the property campsiteId, the routecomponent itself stores an object stores match in its state which has as a property and object named params and campsiteId gets stored as a property of that params object, route renders component CampsiteWithId, the routes matched object gets passed automatically as a prop to component */}
+                            <Route path='/directory/:campsiteId' component={CampsiteWithId} />
+                            {/* telling our App to watch the browser address bar and whenever the Route matches contactus then show Contact component */}
+                            <Route exact path='/contactus' render={() => <Contact resetFeedbackForm={this.props.resetFeedbackForm} />} />
+                            <Route exact path='/aboutus'  render={() => <About partners={this.props.partners} />} />;
+                            {/* Redirect acts as a catch all kinda like default in switch statement */}
+                            <Redirect to='/home' />
+                        </Switch>
+                    </CSSTransition>
+                </TransitionGroup>
                 <Footer />
             </div>
         );
